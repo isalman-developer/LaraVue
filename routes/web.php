@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/admin/dashboard', function(){
-    return view('welcome');
-});
+// adding a condition to take anything as url and load the default view welcome.blade.php
+Route::get('{view}', ApplicationController::class)->where('view', '(.*)');
