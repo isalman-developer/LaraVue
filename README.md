@@ -1,29 +1,29 @@
-## inserting data using bootstrap modal
-1. Axios is a promise-based HTTP library that lets developers make requests to either their own or a third-party server to fetch data. It offers different ways of making requests such as GET , POST , PUT/PATCH , and DELETE .
+## vee-validate (Form Validation)
+`npm install vee-validate`
+1. VeeValidate is the most popular Vue.js form library. It takes care of value tracking, validation, errors, submissions and more.
 
+`2. import {Form,  Field} from 'vee-validate'`
 
-## reactive
-1. reactive() only takes objects, NOT JS primitives (String, Boolean, Number, BigInt, Symbol, null, undefined)
+3. replace `<form>` tag with `<Form>` and `<input/>` tag with `<Field>` from vee-validate.
 
-2. ref() is calling reactive() behind the scenes
+4. instead of v-model give name to Field i.e <br>
+`<Field name="name" type="text" class="ur choice" placeholder="Enter Name"/>`
 
-3. Since reactive() works for objects and ref() calls reactive(), objects work for both BUT, ref() has a .value property for reassigning, reactive() does not have this and therefore __CANNOT be reassigned__
+5. change button save type to submit and remove `@click`
 
-## Using reactive object to send data be inserted
-1. Here we are using reactive as v-model to form inputs that we want to insert into users table. 
+## yup (Schema builder)
+`npm install yup`
+6. Yup is a schema builder for runtime value parsing and validation. Define a schema, transform a value to match, interdependent validations, or value transformation.
 
-2. We can also use v-model with variables but it would make the axios request so messy like defining each variable along with its value to sent in request. 
+7. create validation schema __createUserSchema__ for validating form inputs
 
-3. So we create an object, put all values in it and just passed this object as request body.
+8. `import * as yup from 'yup'` 
 
-4. clearing the object value that also set the inputs to be null and closing modal on success.
+9. inside `<Form @submit="createUser" :validation-schema="createUserSchema" v-slot="{errors}"/>` <br> 
+add a submit like this and validation schema and errors will be the error return against validation schema.
 
-5. when the record is inserted we will return that record back in response and __unshift users.value__ which means we will add the new record to the top.
+10. after each Field add a span tag with associated errors.name i.e
+`<span class="invalid-feedback"> {{ errors.email }} </span>`
 
-## installing jQuery through npm
-1. `npm install jquery`
-
-2. we will use it throughout the project by adding it in __bootstrap.js__
-
-3. remove jquery import from the __app.js__
-
+11. also add a dynamic class to Field to each of the field i.e
+__:class="{'is-invalid':errors.email}"__

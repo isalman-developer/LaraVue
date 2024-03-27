@@ -1,24 +1,24 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { Form, Field } from 'vee-validate';
+import * as yup from 'yup';
 
 const users = ref([]);
-const form = reactive({
-    name: '',
-    email: '',
-    password: '',
-});
 
 //inserting user
-const createUser = () => {
-    axios.post('/api/users', form)
-    .then((response) => {
+const createUserSchema = yup.object({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().required().min(8)
+});
 
-        users.value.unshift(response.data);
-        form.name = "";
-        form.email = "";
-        form.password = "";
-        $("#createUserModal").modal('hide');
-    })
+const createUser = (values, { resetForm }) => {
+    axios.post('/api/users', values)
+        .then((response) => {
+            users.value.unshift(response.data);
+            resetForm();
+            $("#createUserModal").modal('hide');
+        })
 }
 
 
@@ -59,7 +59,7 @@ onMounted(() => {
             <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#createUserModal">
                 Add New User
             </button>
-            
+
             <div class="card">
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -98,32 +98,38 @@ onMounted(() => {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form autocomplete="off">
+                <Form @submit="createUser" :validation-schema="createUserSchema" v-slot="{ errors }">
+                    <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input v-model="form.name" type="text" class="form-control " id="name" aria-describedby="nameHelp"
-                                placeholder="Enter full name">
+                            <Field name="name" type="text" class="form-control " id="name" aria-describedby="nameHelp"
+                                placeholder="Enter full name" :class="{ 'is-invalid': errors.name }" />
+                            <span class="invalid-feedback">{{ errors.name }}</span>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input v-model="form.email" type="email" class="form-control " id="email" aria-describedby="nameHelp"
-                                placeholder="Enter full name">
+                            <Field name="email" type="email" class="form-control " id="email"
+                                aria-describedby="nameHelp" placeholder="Enter full name"
+                                :class="{ 'is-invalid': errors.email }" />
+                            <span class="invalid-feedba">{{ errors.email }}</span>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Password</label>
-                            <input v-model="form.password" type="password" class="form-control " id="password" aria-describedby="nameHelp"
-                                placeholder="Enter password">
+                            <Field name="password" type="password" class="form-control " id="password"
+                                aria-describedby="nameHelp" placeholder="Enter password"
+                                :class="{ 'is-invalid': errors.password }" />
+                            <span class="invalid-feedba">{{ errors.password }}</span>
+
                         </div>
 
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button @click="createUser" type="button" class="btn btn-primary">Save</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </Form>
             </div>
         </div>
     </div>
