@@ -4,7 +4,6 @@ importing these file from admin-lte package as we have installed them through np
 
 import './bootstrap';
 import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
-import 'admin-lte/plugins/jquery/jquery.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
