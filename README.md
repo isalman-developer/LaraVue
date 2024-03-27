@@ -26,3 +26,4 @@
 2. we will use it throughout the project by adding it in __bootstrap.js__
 
 3. remove jquery import from the __app.js__
+

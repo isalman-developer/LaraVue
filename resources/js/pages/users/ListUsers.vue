@@ -21,6 +21,7 @@ const createUser = () => {
     })
 }
 
+
 // getting users
 const getUsers = () => {
     axios.get("/api/users").then((response) => {
@@ -54,9 +55,11 @@ onMounted(() => {
 
     <div class="content">
         <div class="container-fluid">
+
             <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#createUserModal">
                 Add New User
             </button>
+            
             <div class="card">
                 <div class="card-body">
                     <table class="table table-bordered">
