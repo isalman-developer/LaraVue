@@ -1,29 +1,17 @@
-## vee-validate (Form Validation)
-`npm install vee-validate`
-1. VeeValidate is the most popular Vue.js form library. It takes care of value tracking, validation, errors, submissions and more.
+## Now editing the exisitng record
+1. Open the same modal with edit button and onClick at edit button call a function and pass the user as argument to that function
 
-`2. import {Form,  Field} from 'vee-validate'`
+2. in editUser function show open modal and create a ref __formValues__ and set the user values to that __formValues__. it can be used later to fill inputs and also pass in update api call.
 
-3. replace `<form>` tag with `<Form>` and `<input/>` tag with `<Field>` from vee-validate.
+3. updating editUser validation schema, by default password input will have no validation but if user enters something then password field will be required and password length must be equal and greater than 8 characters
 
-4. instead of v-model give name to Field i.e <br>
-`<Field name="name" type="text" class="ur choice" placeholder="Enter Name"/>`
 
-5. change button save type to submit and remove `@click`
+4. ## Template-refernce
+    * It allows us to obtain a direct reference to a specific DOM element or child component instance after it's mounted
+    * first declare a ref `const form = ref(null)`
+    * inside Form tag add a reference(attribute) to the form `ref="form"`
+    * in editUser function use code `form.value.resetForm()` to make the form inputs nullable(to reset form).
 
-## yup (Schema builder)
-`npm install yup`
-6. Yup is a schema builder for runtime value parsing and validation. Define a schema, transform a value to match, interdependent validations, or value transformation.
+5. add a new schema for edit names as __editUserSchema__ where we will make the password by default nullable but when the user enter someting in password inputs then we will validate it.
 
-7. create validation schema __createUserSchema__ for validating form inputs
-
-8. `import * as yup from 'yup'` 
-
-9. inside `<Form @submit="createUser" :validation-schema="createUserSchema" v-slot="{errors}"/>` <br> 
-add a submit like this and validation schema and errors will be the error return against validation schema.
-
-10. after each Field add a span tag with associated errors.name i.e
-`<span class="invalid-feedback"> {{ errors.email }} </span>`
-
-11. also add a dynamic class to Field to each of the field i.e
-__:class="{'is-invalid':errors.email}"__
+6. __@submit="createUser" in Form__ should be replaced by __handleSubmit__, this new function will decide whether to call createUser or updateUser function.
