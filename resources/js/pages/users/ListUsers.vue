@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { Form, Field } from 'vee-validate';
+import { Form, Field, useSetFieldError } from 'vee-validate';
 import * as yup from 'yup';
 
 // constant declaration
@@ -13,11 +13,13 @@ const formValues = ref({
     email: null
 });
 
-const handleSubmit = (values) => {
+/* here we are getting 2 parameters values(input fields) & actions (resetForm, setFieldErrors). Actions are action that are associated with the vee-validate form. we have to pass actions to edit and create function for resetForm and setValidateErrors
+*/
+const handleSubmit = (values, actions) => {
     if (editing.value) {
-        updateUser(values);
+        updateUser(values, actions);
     } else {
-        createUser(values);
+        createUser(values, actions);
     }
 }
 
@@ -48,12 +50,20 @@ const addUser = () => {
     $("#userModal").modal('show');
 }
 
-const createUser = (values) => {
+const createUser = (values, { resetForm, setErrors, setFieldError }) => {
     axios.post('/api/users', values)
         .then((response) => {
             users.value.unshift(response.data);
-            form.value.resetForm();
+            resetForm();
             $("#userModal").modal('hide');
+        }).catch((errors) => {
+            if (errors.response.data.errors) {
+                // to set sepecific error for specific Field
+                // setFieldError('email', errors.response.data.errors.email);
+
+                // to set all errors for all Field
+                setErrors(errors.response.data.errors);
+            }
         })
 }
 
@@ -68,17 +78,17 @@ const editUser = (user) => {
     };
 }
 
-const updateUser = (values) => {
+const updateUser = (values, {setErrors}) => {
     axios.put('/api/users/' + formValues.value.id, values)
         .then((response) => {
             let index = users.value.findIndex(user => user.id === response.data.id);
             users.value[index] = response.data;
             $("#userModal").modal('hide');
-
-        }).catch((error) => {
-            console.log(error);
-        }).finally(() => {
             form.value.resetForm();
+        }).catch((errors) => {
+            if(errors.response.data.errors){
+                setErrors(errors.response.data.errors);
+            }
         })
 }
 
