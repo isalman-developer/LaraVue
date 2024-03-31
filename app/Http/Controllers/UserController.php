@@ -48,6 +48,7 @@ class UserController extends Controller
         request()->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|min:8'
         ]);
 
         $user->update([
@@ -57,5 +58,11 @@ class UserController extends Controller
         ]);
 
         return $user;
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return response()->noContent();
     }
 }
