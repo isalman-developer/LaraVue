@@ -1,5 +1,5 @@
-## Toastr
-1. using toastr for sending notifications. it is already installed as we installed admin-lte package
+## Deleting a user with alert confirmation
+1. when we a delete a user a pop up will appear asking for confirmation and after deleting a user we will remove it from the list and show notification.
 
-2. we will create a composable [toastr.js](./resources/js/toastr.js) where will import toastr and css file. and also export a function to return toastr object along with some other options.
+2. removing from the list will be done by filtering `users.value.filter` functionality to filter out the deleted user id.
 
