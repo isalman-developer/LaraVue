@@ -2,11 +2,13 @@
 import { onMounted, ref } from 'vue';
 import { Form, Field, useSetFieldError } from 'vee-validate';
 import * as yup from 'yup';
+import useToastr from '../../toastr';
 
 // constant declaration
 const users = ref([]);
 const editing = ref(false);
 const form = ref();
+const toastr = useToastr();
 const formValues = ref({
     id: null,
     name: null,
@@ -34,7 +36,6 @@ const editUserSchema = yup.object({
     name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().when((password, schema) => {
-        console.log(password[0]);
         if (password[0] == undefined || password[0] == "") {
             return schema;
         } else {
@@ -56,6 +57,7 @@ const createUser = (values, { resetForm, setErrors, setFieldError }) => {
             users.value.unshift(response.data);
             resetForm();
             $("#userModal").modal('hide');
+            toastr.success("User added successfully.");
         }).catch((errors) => {
             if (errors.response.data.errors) {
                 // to set sepecific error for specific Field
@@ -85,6 +87,7 @@ const updateUser = (values, {setErrors}) => {
             users.value[index] = response.data;
             $("#userModal").modal('hide');
             form.value.resetForm();
+            toastr.success("User updated successfully.");
         }).catch((errors) => {
             if(errors.response.data.errors){
                 setErrors(errors.response.data.errors);
