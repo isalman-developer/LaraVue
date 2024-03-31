@@ -4,6 +4,7 @@ import { Form, Field, useSetFieldError } from 'vee-validate';
 import * as yup from 'yup';
 import useToastr from '../../toastr';
 import axios from 'axios';
+import { formateDate } from '../../helper.js';
 
 // constant declaration
 const users = ref([]);
@@ -167,7 +168,7 @@ onMounted(() => {
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.created_at }}</td>
+                                <td>{{ formateDate(user.created_at) }}</td>
                                 <td>{{ user.role }}</td>
                                 <td>
                                     <a @click="editUser(user)" href="#" class="fa fa-edit"></a>
