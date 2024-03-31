@@ -1,12 +1,8 @@
-## Moment js
-1. Parse, validate, manipulate, and display dates and times in JavaScript.
+## ENUM in PHP
+1. define an enum first in [RoleType](./app/Enums/RoleType.php). define your enum values inside this file.
 
-2. Formatting data (create_at) using __moment.js__
+2. add a migration to add this columns inside the users table. [migration_to_add_enum](./database/migrations/2024_03_31_215901_add_role_field_to_users.php)
 
-3. `npm install moment`
-
-4. create a helper.js file for common functionalities ['helper.js'](./resources/js/helper.js)
-
-5. add a functiona __formatDate__ which will aceept a date and will format it according to format defined in it and it can be used everywhere we want to change the data to the same format.
-
-6. `import {formateDate} from './resources/js/helper'` and it can be used throughout the template now
+3. add an accessor in [User.php](./app/models/User.php) model to alter role interger into name i.e 
+    * 1 => ADMIN
+    * 2 => USER
