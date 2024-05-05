@@ -1,8 +1,19 @@
-## ENUM in PHP
-1. define an enum first in [RoleType](./app/Enums/RoleType.php). define your enum values inside this file.
+## Extracting code into new components 
+### *edit and delete user is performed by this functionality*
+* it will be like code isolation, moving a code related to some functionlity into a new components
+* like userListItem is a new component which has the code user edit & delete
+* each user will be represetnt in a row
+* each user will have its functionalities like edit & deleting
+* so why not we move this code in a component and iterate that component.
 
-2. add a migration to add this columns inside the users table. [migration_to_add_enum](./database/migrations/2024_03_31_215901_add_role_field_to_users.php)
 
-3. add an accessor in [User.php](./app/models/User.php) model to alter role interger into name i.e 
-    * 1 => ADMIN
-    * 2 => USER
+## Props
+1. it is used to send data from parent component to child component
+2. when we isolate the code into components then we need to props to send data from one component to another.
+
+## Emits
+1. with the help of emits we can create custom events to send data from child component to parent component.
+2. props are used to send data from parent to child and emits can be used to send data from child to parent components.
+3. it can be used to affect some data in parent component if an action is performed in child component
+4. i.e like in UserListItem when i delete the record, then the __const users = ref([])__ should also be updated and remove that record from list.
+5. __@emit = kabab-case-emit-name-defined-in-child-component__ syntax is used inside the child component tag in the parent component(where we have defined it).

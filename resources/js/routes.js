@@ -10,7 +10,7 @@ export default [
     }, {
         path: '/admin/users',
         name: 'admin.users',
-        component: () => import('./pages/users/ListUsers.vue'),
+        component: () => import('./pages/users/UsersList.vue'),
     }, {
         path: '/admin/settings',
         name: 'admin.settings',
