@@ -1,17 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { Form, Field, useSetFieldError } from 'vee-validate';
+import { Form, Field } from 'vee-validate';
 import * as yup from 'yup';
-import useToastr from '../../toastr';
+import useToastr from '../../toastr.js';
 import axios from 'axios';
-import { formateDate } from '../../helper.js';
+import UserListItem from './UserListItem.vue';
 
 // constant declaration
 const users = ref([]);
 const editing = ref(false);
 const form = ref();
 const toastr = useToastr();
-const userIdToBeDeleted = ref();
 const formValues = ref({
     id: null,
     name: null,
@@ -99,18 +98,8 @@ const updateUser = (values, { setErrors }) => {
 }
 
 // deleting user code
-const confirmUserDeletion = (user) => {
-    $("#deleteUserModal").modal('show');
-    userIdToBeDeleted.value = user.id;
-}
-
-const deleteUser = () => {
-    axios.delete(`/api/users/${userIdToBeDeleted.value}`)
-        .then(() => {
-            users.value = users.value.filter(user => user.id !== userIdToBeDeleted.value);
-            $("#deleteUserModal").modal('hide');
-            toastr.error("User deleted!!!");
-        })
+const deleteUser = (userId) => {
+    users.value = users.value.filter(user => user.id !== userId);
 }
 
 // getting users
@@ -164,18 +153,8 @@ onMounted(() => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(user, index) in users" :key="user.id">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ formateDate(user.created_at) }}</td>
-                                <td>{{ user.role }}</td>
-                                <td>
-                                    <a @click="editUser(user)" href="#" class="fa fa-edit"></a>
-                                    <a @click="confirmUserDeletion(user)" href="#"
-                                        class="fa fa-trash text-danger ml-2"></a>
-                                </td>
-                            </tr>
+                            <UserListItem v-for="(user, index) in users" :user="user" :index="index" :key="user.id"
+                                @user-deleted="deleteUser" @edit-user="editUser"/>
                         </tbody>
                     </table>
                 </div>
@@ -234,27 +213,5 @@ onMounted(() => {
         </div>
     </div>
 
-    <!-- Delete User Modal -->
-    <div class="modal fade" id="deleteUserModal" data-backdrop="static" tabindex="-1" role="dialog"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">
-                        <span>Delete User</span>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this user?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </template>
