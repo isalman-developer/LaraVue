@@ -40,9 +40,12 @@ const roles = ref([
 ]);
 
 const changeRole = (user, role) => {
-    axios.patch(`api/users/${user.id}/change-role`, {
+    axios.patch(`/api/users/${user.id}/change-role`, {
         role: role
-    }).then(() => toastr.success("User role changed successfully."));
+    })
+        .then(() => {
+            toastr.success("Role changed successfully.");
+        })
 }
 </script>
 
@@ -53,8 +56,8 @@ const changeRole = (user, role) => {
         <td>{{ user.email }}</td>
         <td>{{ formateDate(user.created_at) }}</td>
         <td>
-            <select class="form-control" :select="changeRole(user, $event.target.value)">
-                <option v-for="role in roles" value="{{ role.value }}">
+            <select class="form-control" @change="changeRole(user, $event.target.value)">
+                <option v-for="(role, index) in roles" :value="role.value" :selected="user.role === role.name">
                     {{ role.name }}
                 </option>
             </select>

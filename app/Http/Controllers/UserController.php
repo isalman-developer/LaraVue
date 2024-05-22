@@ -73,7 +73,7 @@ class UserController extends Controller
     }
 
     /**
-     * function to change the role
+     * function to change the role of the user
      *
      * @param User $user
      * @return void
@@ -83,7 +83,6 @@ class UserController extends Controller
         $user->update([
             'role' => request('role')
         ]);
-
-        return response()->json(["success" => "User role has been changed."]);
+        return response()->json(['success' => true]);
     }
 }
