@@ -5,7 +5,7 @@ import useToastr from '../../toastr.js';
 
 const userIdToBeDeleted = ref();
 const toastr = useToastr();
-const emit = defineEmits(['userDeleted','editUser'])
+const emit = defineEmits(['userDeleted', 'editUser'])
 defineProps(['user', 'index']);
 
 //delet user code
@@ -27,6 +27,23 @@ const deleteUser = () => {
 const editUser = (user) => {
     emit('editUser', user);
 }
+
+// user roles code
+const roles = ref([
+    {
+        name: 'ADMIN',
+        value: 1
+    }, {
+        name: 'USER',
+        value: 2
+    }
+]);
+
+const changeRole = (user, role) => {
+    axios.patch(`api/users/${user.id}/change-role`, {
+        role: role
+    }).then(() => toastr.success("User role changed successfully."));
+}
 </script>
 
 <template>
@@ -35,7 +52,13 @@ const editUser = (user) => {
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ formateDate(user.created_at) }}</td>
-        <td>{{ user.role }}</td>
+        <td>
+            <select class="form-control" :select="changeRole(user, $event.target.value)">
+                <option v-for="role in roles" value="{{ role.value }}">
+                    {{ role.name }}
+                </option>
+            </select>
+        </td>
         <td>
             <a @click="editUser(user)" href="#" class="fa fa-edit"></a>
             <a @click="confirmUserDeletion(user)" href="#" class="fa fa-trash text-danger ml-2"></a>
