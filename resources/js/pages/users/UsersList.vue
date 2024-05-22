@@ -6,9 +6,11 @@ import useToastr from '../../toastr.js';
 import axios from 'axios';
 import UserListItem from './UserListItem.vue';
 import { debounce } from 'loadsh';
+import { Bootstrap4Pagination } from 'laravel-vue-pagination';
+
 
 // constant declaration
-const users = ref([]);
+const users = ref({ 'data': [] });
 const editing = ref(false);
 const form = ref();
 const toastr = useToastr();
@@ -62,12 +64,14 @@ const createUser = (values, { resetForm, setErrors, setFieldError }) => {
             $("#userModal").modal('hide');
             toastr.success("User added successfully.");
         }).catch((errors) => {
-            if (errors.response.data.errors) {
+            if (errors.response?.data?.errors) {
                 // to set sepecific error for specific Field
                 // setFieldError('email', errors.response.data.errors.email);
 
                 // to set all errors for all Field
                 setErrors(errors.response.data.errors);
+            }else{
+                console.log(errors);
             }
         })
 }
@@ -104,8 +108,8 @@ const deleteUser = (userId) => {
 }
 
 // getting users
-const getUsers = () => {
-    axios.get("/api/users").then((response) => {
+const getUsers = (page = 1) => {
+    axios.get(`/api/users?page=${page}`).then((response) => {
         users.value = response.data;
     });
 };
@@ -177,8 +181,8 @@ onMounted(() => {
                                 <th>Options</th>
                             </tr>
                         </thead>
-                        <tbody v-if="users.length > 0">
-                            <UserListItem v-for="(user, index) in users" :user="user" :index="index" :key="user.id"
+                        <tbody v-if="users.data.length > 0">
+                            <UserListItem v-for="(user, index) in users.data" :user="user" :index="index" :key="user.id"
                                 @user-deleted="deleteUser" @edit-user="editUser" />
                         </tbody>
                         <tbody v-else>
@@ -191,6 +195,7 @@ onMounted(() => {
                     </table>
                 </div>
             </div>
+            <Bootstrap4Pagination :data="users" @pagination-change-page="getUsers" />
         </div>
     </div>
 
