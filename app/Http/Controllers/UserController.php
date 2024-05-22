@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -15,6 +16,13 @@ class UserController extends Controller
     {
         $users = User::latest()->get();
         return $users;
+    }
+
+    public function search()
+    {
+        $searchQuery = request('query');
+        $users = User::where('name', 'like', "%" . $searchQuery . "%")->get();
+        return response()->json($users);
     }
 
     /**

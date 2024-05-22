@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Form, Field } from 'vee-validate';
 import * as yup from 'yup';
 import useToastr from '../../toastr.js';
 import axios from 'axios';
 import UserListItem from './UserListItem.vue';
+import { debounce } from 'loadsh';
 
 // constant declaration
 const users = ref([]);
@@ -109,6 +110,24 @@ const getUsers = () => {
     });
 };
 
+// search functionality
+const searchQuery = ref(null);
+const search = () => {
+    axios.get('/api/users/search', {
+        params: {
+            query: searchQuery.value
+        }
+    }).then((response) => {
+        users.value = response.data;
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+watch(searchQuery, debounce(() => {
+    search();
+}, 300));
+
 onMounted(() => {
     getUsers();
 });
@@ -135,9 +154,15 @@ onMounted(() => {
     <div class="content">
         <div class="container-fluid">
 
-            <button type="button" class="btn btn-primary mb-2" @click="addUser">
-                Add New User
-            </button>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary mb-2" @click="addUser">
+                    Add New User
+                </button>
+
+                <div>
+                    <input type="text" class="form-control" v-model="searchQuery">
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -152,9 +177,16 @@ onMounted(() => {
                                 <th>Options</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="users.length > 0">
                             <UserListItem v-for="(user, index) in users" :user="user" :index="index" :key="user.id"
-                                @user-deleted="deleteUser" @edit-user="editUser"/>
+                                @user-deleted="deleteUser" @edit-user="editUser" />
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    No Users Found!!!
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
