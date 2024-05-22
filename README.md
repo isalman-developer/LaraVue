@@ -6,4 +6,6 @@
 
 
 #### When the role in database and in loop are matched, then that option will be selected automatically.
-` <option :selected="role.value === user.role"> Role Name </option> ` 
+` <option v-for="(role, index) in roles" :value="role.value" :selected="user.role === role.name">` 
+ `   {{ role.name }} `
+ ` </option> ` 
