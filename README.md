@@ -1,16 +1,7 @@
 ## Deleting Bulk Users 
-* add checkbox in each row of users list in UserListsItem
-* add an emit for each checkbox so that the selected User is send to parent UserList component
-* on clicking each checbkox 
-    * an emit will be done to parent component where we will add a function to that event so the selected user will be added to an array. 
-    * we will add selected __user id__ to array __`const selectedUsers = ref([])`__
-    * a button will appear on which we will call api to delete those selected users (v-if="selectedUsers.length > 0
-    ")
-
-* while checking or unchecking checkobox we will also check if the user is already exist in __selectUsers__ array, we will remove it if it exists otherwise add it to array. (so there should be no duplicate user ids)
-
-* on success from api 
-    * we will show a toast 
-    * set the selectedUsers array empty 
-    * the button will disappear 
-    * filter out the selectedUsers from users ref, so that users should disappear from list also
+* when we click on checkbox in header then all of the following checkboxes will be auto checked
+* we will create a new property called __`cont selectAll = ref(false);`__ 
+* this property will be used to for checking all checkboxes, and filling __selectedUsers__ array with all of the id of the current page
+* as well as the array that contains the selected users id will also be filled with the id of all users
+* we will pass the __selectAll__ prop as boolean to child component(that is a single row which is iterating), if __selectAll__ is true then all of the checkboxes in the child component will be checked otherwise not
+* when the delete functionality is perfomed we will also set the __selectAll__ to false

@@ -15,6 +15,7 @@ const editing = ref(false);
 const form = ref();
 const toastr = useToastr();
 const selectedUsers = ref([]);
+const selectAll = ref(false);
 const formValues = ref({
     id: null,
     name: null,
@@ -153,10 +154,18 @@ const bulkDelete = () => {
     }).then(response => {
         users.value.data = users.value.data.filter(user => !selectedUsers.value.includes(user.id));
         selectedUsers.value = [];
+        selectAll.value = false;
         toastr.success(response.data.success);
     })
 }
 
+const selectAllUsers = () => {
+    if (selectAll.value) {
+        selectedUsers.value = users.value.data.map(user => user.id);
+    } else {
+        selectedUsers.value = [];
+    }
+}
 
 onMounted(() => {
     getUsers();
@@ -205,7 +214,7 @@ onMounted(() => {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><input type="checkbox"></th>
+                                <th><input type="checkbox" v-model="selectAll" @change="selectAllUsers"></th>
                                 <th style="width: 10px">#</th>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -216,7 +225,8 @@ onMounted(() => {
                         </thead>
                         <tbody v-if="users.data.length > 0">
                             <UserListItem v-for="(user, index) in users.data" :user="user" :index="index" :key="user.id"
-                                @user-deleted="deleteUser" @edit-user="editUser" @toggle-selection="toggleSelection" />
+                                :select-all="selectAll" @user-deleted="deleteUser" @edit-user="editUser"
+                                @toggle-selection="toggleSelection" />
                         </tbody>
                         <tbody v-else>
                             <tr>
