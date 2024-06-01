@@ -2,11 +2,16 @@
 import { ref } from 'vue';
 import { formateDate } from '../../helper.js';
 import useToastr from '../../toastr.js';
+import { boolean } from 'yup';
 
 const userIdToBeDeleted = ref();
 const toastr = useToastr();
 const emit = defineEmits(['userDeleted', 'editUser', 'toggleSelection']);
-const props = defineProps(['user', 'index']);
+const props = defineProps({
+    'user': Object,
+    'index': Number,
+    'selectAll': Boolean
+});
 
 //delet user code
 const confirmUserDeletion = (user) => {
@@ -57,7 +62,7 @@ const toggleSelection = () => {
 
 <template>
     <tr>
-        <td><input type="checkbox" @change="toggleSelection"></td>
+        <td><input type="checkbox" :checked="selectAll" @change="toggleSelection"></td>
         <td>{{ index + 1 }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
