@@ -5,8 +5,8 @@ import useToastr from '../../toastr.js';
 
 const userIdToBeDeleted = ref();
 const toastr = useToastr();
-const emit = defineEmits(['userDeleted', 'editUser'])
-defineProps(['user', 'index']);
+const emit = defineEmits(['userDeleted', 'editUser', 'toggleSelection']);
+const props = defineProps(['user', 'index']);
 
 //delet user code
 const confirmUserDeletion = (user) => {
@@ -47,10 +47,17 @@ const changeRole = (user, role) => {
             toastr.success("Role changed successfully.");
         })
 }
+
+//user selection for bulk delete
+const toggleSelection = () => {
+    emit('toggleSelection', props.user);
+}
+
 </script>
 
 <template>
     <tr>
+        <td><input type="checkbox" @change="toggleSelection"></td>
         <td>{{ index + 1 }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>

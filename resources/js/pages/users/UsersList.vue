@@ -14,11 +14,13 @@ const users = ref({ 'data': [] });
 const editing = ref(false);
 const form = ref();
 const toastr = useToastr();
+const selectedUsers = ref([]);
 const formValues = ref({
     id: null,
     name: null,
     email: null
 });
+
 
 /* here we are getting 2 parameters values(input fields) & actions (resetForm, setFieldErrors). Actions are action that are associated with the vee-validate form. we have to pass actions to edit and create function for resetForm and setValidateErrors
 */
@@ -70,7 +72,7 @@ const createUser = (values, { resetForm, setErrors, setFieldError }) => {
 
                 // to set all errors for all Field
                 setErrors(errors.response.data.errors);
-            }else{
+            } else {
                 console.log(errors);
             }
         })
@@ -132,6 +134,30 @@ watch(searchQuery, debounce(() => {
     search();
 }, 300));
 
+
+// deleting bulk users
+const toggleSelection = (user) => {
+    const index = selectedUsers.value.indexOf(user.id);
+    if (index === -1) {
+        selectedUsers.value.push(user.id)
+    } else {
+        selectedUsers.value.splice(index, 1)
+    }
+}
+
+const bulkDelete = () => {
+    axios.delete('/api/users/', {
+        data: {
+            ids: selectedUsers.value
+        }
+    }).then(response => {
+        users.value.data = users.value.data.filter(user => !selectedUsers.value.includes(user.id));
+        selectedUsers.value = [];
+        toastr.success(response.data.success);
+    })
+}
+
+
 onMounted(() => {
     getUsers();
 });
@@ -159,9 +185,15 @@ onMounted(() => {
         <div class="container-fluid">
 
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-primary mb-2" @click="addUser">
-                    Add New User
-                </button>
+                <div>
+                    <button type="button" class="btn btn-primary mb-2" @click="addUser">
+                        Add New User
+                    </button>
+                    <button v-if="selectedUsers.length > 0" type="button" class="btn btn-danger ml-2 mb-2"
+                        @click="bulkDelete">
+                        Deleted Selected
+                    </button>
+                </div>
 
                 <div>
                     <input type="text" class="form-control" v-model="searchQuery">
@@ -173,6 +205,7 @@ onMounted(() => {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th><input type="checkbox"></th>
                                 <th style="width: 10px">#</th>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -183,7 +216,7 @@ onMounted(() => {
                         </thead>
                         <tbody v-if="users.data.length > 0">
                             <UserListItem v-for="(user, index) in users.data" :user="user" :index="index" :key="user.id"
-                                @user-deleted="deleteUser" @edit-user="editUser" />
+                                @user-deleted="deleteUser" @edit-user="editUser" @toggle-selection="toggleSelection" />
                         </tbody>
                         <tbody v-else>
                             <tr>
