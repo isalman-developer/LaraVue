@@ -1,3 +1,6 @@
-## adding count of selected users 
-* when we select the checkbox there should be information to show how many users have been selected
-* when we go to next page, we are going to reset all check boxes and selected values too because are on new page(pagination)
+## Appointment module
+* there will be some clients and they will be assigned appointments
+* migration and factories and models are created for both (first will be client and then appointment)
+
+* in factory we use some new functionalities like safeEmail, sentence, paragraph, dateTimeBetween, addHours etc
+* checkout the migration and factory code of appointments especially
