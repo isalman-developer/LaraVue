@@ -62,7 +62,7 @@ const addUser = () => {
 const createUser = (values, { resetForm, setErrors, setFieldError }) => {
     axios.post('/api/users', values)
         .then((response) => {
-            users.value.unshift(response.data);
+            users.value.data.unshift(response.data);
             resetForm();
             $("#userModal").modal('hide');
             toastr.success("User added successfully.");
@@ -113,6 +113,8 @@ const deleteUser = (userId) => {
 // getting users
 const getUsers = (page = 1) => {
     axios.get(`/api/users?page=${page}`).then((response) => {
+        selectAll.value = false;
+        selectedUsers.value = []
         users.value = response.data;
     });
 };
@@ -194,14 +196,18 @@ onMounted(() => {
         <div class="container-fluid">
 
             <div class="d-flex justify-content-between">
-                <div>
+                <div class="d-flex">
                     <button type="button" class="btn btn-primary mb-2" @click="addUser">
+                        <span class="fa fa-plus-circle"></span>
                         Add New User
                     </button>
-                    <button v-if="selectedUsers.length > 0" type="button" class="btn btn-danger ml-2 mb-2"
-                        @click="bulkDelete">
-                        Deleted Selected
-                    </button>
+                    <div class="d-flex ml-2" v-if="selectedUsers.length > 0">
+                        <button type="button" class="btn btn-danger ml-2 mb-2" @click="bulkDelete">
+                            <span class="fa fa-trash"></span>
+                            Deleted Selected
+                        </button>
+                        <span class="m-2">Selected {{ selectedUsers.length }} users</span>
+                    </div>
                 </div>
 
                 <div>

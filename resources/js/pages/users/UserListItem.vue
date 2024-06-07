@@ -36,11 +36,11 @@ const editUser = (user) => {
 // user roles code
 const roles = ref([
     {
-        name: 'ADMIN',
-        value: 1
-    }, {
         name: 'USER',
         value: 2
+    }, {
+        name: 'ADMIN',
+        value: 1
     }
 ]);
 
