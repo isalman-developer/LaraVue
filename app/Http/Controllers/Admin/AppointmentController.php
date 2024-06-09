@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Appointment;
+use App\Enums\AppointmentStatus;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -17,8 +19,8 @@ class AppointmentController extends Controller
     public function index()
     {
         return Appointment::query()
-            ->with('client')
-            ->latest()
+            ->with('client')->latest()
+            ->when(request('status'), fn ($query) => $query->where('status', request('status')))
             ->paginate()
             ->through(fn ($appointment) => [
                 'id' => $appointment->id,
@@ -32,5 +34,18 @@ class AppointmentController extends Controller
                 ],
                 'client' => $appointment->client
             ]);
+    }
+
+    public function getStatusWithCount(): Collection
+    {
+        $statuses = AppointmentStatus::cases();
+        return collect($statuses)->map(function ($status) {
+            return [
+                'name' => $status->name,
+                'value' => $status->value,
+                'color' => $status->color($status->value),
+                'count' => Appointment::where('status', $status->value)->count()
+            ];
+        });
     }
 }

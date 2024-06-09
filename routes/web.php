@@ -31,6 +31,7 @@ Route::delete('/api/users', [UserController::class, 'bulkDelete']);
 
 // appointments routes
 Route::get('/api/appointments', [AppointmentController::class, 'index']);
+Route::get('/api/appointments/status', [AppointmentController::class, 'getStatusWithCount']);
 
 // adding a condition to take anything as url and load the default view welcome.blade.php & this route must be at the end always
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)');

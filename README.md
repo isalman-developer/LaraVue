@@ -1,14 +1,23 @@
-## Appointments list
-* showing the list of appointments throug pagination
-* creating enum for status 
-    1. to show name of a status (1 Schedule 2 Confirmed 3 Cancelled)
-    2. and also to show associated color for each of the status
+## Click on Tabs to show related data 
+* Showing multiple tabs and showing related data in table
+    1. All appointments
+    2. Scheduled
+    3. Confirmed
+    4. Cancelled
 
-### Through
-* creating AppointmentController and also using __*through()*__ function with pagination. 
-* __*through()*__ is used to iterate and manipulate over each of the item in data get from pagination.
-* also using  __*through()*__ to change the value of each of the column of each of appointment like change start_time and end_time to a custom value and also changing status to a custom array of value
+* These tabs are get from an array that is returned by an api.
+* __getStatusWithCount__ Function defined in AppointmentController to iterate over the cases of AppointmentStatus
+* in this function we have returned a collection and each object of a collection contains 
+    1. name
+    2. value (1,2,3)
+    3. count
+    4. color
 
-### Cast used in Appoint model
+* Then dynamically we have assigned classes to the tabs to be shown as active
 
-### iterating over appointments and also dynamically assigning the class to each of the status
+* showing the count of appointments on each of the associated tab
+
+## 1)computed 2)filter and 3)reduce function is used to count total of the appointments to be shown on `All` tab
+
+
+
