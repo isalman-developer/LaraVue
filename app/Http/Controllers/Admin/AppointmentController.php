@@ -36,6 +36,11 @@ class AppointmentController extends Controller
             ]);
     }
 
+    /**
+     * function to return a collection of all available appointment status along with their count, color and vlue
+     *
+     * @return Collection
+     */
     public function getStatusWithCount(): Collection
     {
         $statuses = AppointmentStatus::cases();
@@ -47,5 +52,24 @@ class AppointmentController extends Controller
                 'count' => Appointment::where('status', $status->value)->count()
             ];
         });
+    }
+
+    public function store()
+    {
+        request()->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        Appointment::create([
+            'title' => request('title'),
+            'description' => request('description'),
+            'client_id' => 1,
+            'start_time' => now(),
+            'end_time' => now(),
+            'status' => AppointmentStatus::SCHEDULED,
+        ]);
+
+        return response()->json(['message' => 'Appointment added successfully']);
     }
 }

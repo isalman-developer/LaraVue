@@ -8,6 +8,10 @@ export default [
         name: 'admin.appointments',
         component: () => import('./pages/appointments/ListAppointments.vue')
     }, {
+        path: '/admin/appointments/create',
+        name: 'admin.appointments.create',
+        component: () => import('./pages/appointments/CrateAppointments.vue')
+    }, {
         path: '/admin/users',
         name: 'admin.users',
         component: () => import('./pages/users/UsersList.vue'),

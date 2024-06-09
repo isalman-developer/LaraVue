@@ -11,6 +11,7 @@ class Appointment extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
     public $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
