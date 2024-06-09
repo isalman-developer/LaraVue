@@ -16,11 +16,41 @@ const form = ref();
 const toastr = useToastr();
 const selectedUsers = ref([]);
 const selectAll = ref(false);
+const userIdToBeDeleted = ref();
 const formValues = ref({
     id: null,
     name: null,
     email: null
 });
+
+
+
+// getting users
+const getUsers = (page = 1) => {
+    axios.get(`/api/users?page=${page}`).then((response) => {
+        selectAll.value = false;
+        selectedUsers.value = []
+        users.value = response.data;
+    });
+};
+
+// search functionality
+const searchQuery = ref(null);
+const search = () => {
+    axios.get('/api/users/search', {
+        params: {
+            query: searchQuery.value
+        }
+    }).then((response) => {
+        users.value = response.data;
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+watch(searchQuery, debounce(() => {
+    search();
+}, 300));
 
 
 /* here we are getting 2 parameters values(input fields) & actions (resetForm, setFieldErrors). Actions are action that are associated with the vee-validate form. we have to pass actions to edit and create function for resetForm and setValidateErrors
@@ -105,38 +135,20 @@ const updateUser = (values, { setErrors }) => {
         })
 }
 
-// deleting user code
-const deleteUser = (userId) => {
-    users.value = users.value.filter(user => user.id !== userId);
+//delet user code
+const confirmUserDeletion = (userId) => {
+    $("#deleteUserModal").modal('show');
+    userIdToBeDeleted.value = userId;
 }
 
-// getting users
-const getUsers = (page = 1) => {
-    axios.get(`/api/users?page=${page}`).then((response) => {
-        selectAll.value = false;
-        selectedUsers.value = []
-        users.value = response.data;
-    });
-};
-
-// search functionality
-const searchQuery = ref(null);
-const search = () => {
-    axios.get('/api/users/search', {
-        params: {
-            query: searchQuery.value
-        }
-    }).then((response) => {
-        users.value = response.data;
-    }).catch((error) => {
-        console.log(error);
-    });
+const deleteUser = () => {
+    axios.delete(`/api/users/${userIdToBeDeleted.value}`)
+        .then(() => {
+            $("#deleteUserModal").modal('hide');
+            users.value.data = users.value.data.filter(user => user.id !== userIdToBeDeleted.value);
+            toastr.error("User deleted!!!");
+        })
 }
-
-watch(searchQuery, debounce(() => {
-    search();
-}, 300));
-
 
 // deleting bulk users
 const toggleSelection = (user) => {
@@ -231,8 +243,8 @@ onMounted(() => {
                         </thead>
                         <tbody v-if="users.data.length > 0">
                             <UserListItem v-for="(user, index) in users.data" :user="user" :index="index" :key="user.id"
-                                :select-all="selectAll" @user-deleted="deleteUser" @edit-user="editUser"
-                                @toggle-selection="toggleSelection" />
+                                :select-all="selectAll" @confirm-user-deletion="confirmUserDeletion"
+                                @edit-user="editUser" @toggle-selection="toggleSelection" />
                         </tbody>
                         <tbody v-else>
                             <tr>
@@ -300,4 +312,27 @@ onMounted(() => {
     </div>
 
 
+    <!-- Delete User Modal -->
+    <div class="modal fade" id="deleteUserModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span>Delete User</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button @click.prevent="deleteUser" type="button" class="btn btn-primary">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
