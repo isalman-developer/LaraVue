@@ -1,18 +1,16 @@
-## Creating new appointment and also adding validation
+## flatpickr package for time
+* installing this package for start_time and end_time inputs.
+    1. this package is good for inputs to show data and time
+    2. also helpful in formatting time and hours to be started from
+    3. there is a vast configuration 
 
-* create a new route and a new component. to ne opened when we click on __Add New Appointment__
+* see how flatpickr is initialied and used in crateAppointments 
+    1. imported 
+    2. css is imported
+    3. initialized onMounted (class and configuration is defined)
 
-* make the nav item dynamic also (Appointments, Users, Setting, Profile etc)
-    1. we will use a route functionality __$router.path.startsWith()__ i.e 
-    `<router-link to="" :active="$router.path.startsWtih('/admin/appointments') ? 'active' : '' " />`
+## adding validation for start_time, end_time and client
 
-* now create a reactive constant for form and bind the form objectives
-
-* also import form from vee-validate
-
-* on submit create a function handleSubmit and through axios submit the form. also create the route for it.
-
-* on successful insertion, redirect the page to appointments listing using useRouter
-
-* import toastr and use its functionality on successful submission
+## adding new api for getting clients
+* getting clients and iterating over it to be selected while creating appointment
 
