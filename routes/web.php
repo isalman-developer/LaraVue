@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AppointmentController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,5 +35,7 @@ Route::get('/api/appointments', [AppointmentController::class, 'index']);
 Route::get('/api/appointments/status', [AppointmentController::class, 'getStatusWithCount']);
 Route::post('/api/appointments/store', [AppointmentController::class, 'store']);
 
+// client routes
+Route::get('/api/clients', [ClientController::class, 'index']);
 // adding a condition to take anything as url and load the default view welcome.blade.php & this route must be at the end always
 Route::get('{view}', ApplicationController::class)->where('view', '(.*)');
