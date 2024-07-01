@@ -98,4 +98,10 @@ class AppointmentController extends Controller
         $appointment->update($validated);
         return response()->json(['message' => 'Appointment added successfully']);
     }
+
+    public function destroy(Appointment $appointment)
+    {
+        $appointment->delete();
+        return response()->json(['succes' => true], 200);
+    }
 }
