@@ -14,20 +14,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::latest()->paginate();
+        $users = User::query()
+            ->when(request('query'), function ($query, $searchQuery) {
+                $query->where('name', 'like', "%" . $searchQuery . "%");
+            })
+            ->latest()
+            ->paginate();
         return $users;
-    }
-
-    /**
-     * function for searching users
-     *
-     * @return void
-     */
-    public function search()
-    {
-        $searchQuery = request('query');
-        $users = User::where('name', 'like', "%" . $searchQuery . "%")->paginate();
-        return response()->json($users);
     }
 
     /**

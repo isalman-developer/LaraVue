@@ -27,7 +27,11 @@ const formValues = ref({
 
 // getting users
 const getUsers = (page = 1) => {
-    axios.get(`/api/users?page=${page}`).then((response) => {
+    axios.get(`/api/users?page=${page}`, {
+        params: {
+            query: searchQuery.value
+        }
+    }).then((response) => {
         selectAll.value = false;
         selectedUsers.value = []
         users.value = response.data;
@@ -36,20 +40,8 @@ const getUsers = (page = 1) => {
 
 // search functionality
 const searchQuery = ref(null);
-const search = () => {
-    axios.get('/api/users/search', {
-        params: {
-            query: searchQuery.value
-        }
-    }).then((response) => {
-        users.value = response.data;
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
 watch(searchQuery, debounce(() => {
-    search();
+    getUsers();
 }, 300));
 
 

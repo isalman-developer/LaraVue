@@ -1,46 +1,17 @@
-##  Sweet alert
+##  merge search function into index funtion
 
-1. npm install sweetalert2
+1. remove api for search and function defined in controller
 
-2. import Swal from 'sweetalert2'
+2. remove `const search()` function
 
-3. ```
-    Swal.fire({
-    title: "Are you sure?",
-    
-    text: "You won't be able to revert this!",
-    
-    icon: "warning",
-    
-    showCancelButton: true,
-    
-    confirmButtonColor: "#3085d6",
-    
-    cancelButtonColor: "#d33",
-    
-    confirmButtonText: "Yes, delete it!"
-    
-    }).then((result) => {
-    
-    if (result.isConfirmed) {
-    
-        axios.delete('url to delete the appointment')
-    
-        .then((response) => {
-            
-            //also filter appointments to remove that appointment with id
+3. inside `watch` call `getUsers` function
 
-            Swal.fire({
-    
-            title: "Deleted!",
-    
-            text: "Your file has been deleted.",
-    
-            icon: "success"
-    
-            });
-        });
+4. merge 
+    ```
+    params: {
+        query: searchQuery.value
     }
-    });
-```
+    ``` 
+    into `getUsers` function
 
+5. also made some changes inside `index` function in UserController
