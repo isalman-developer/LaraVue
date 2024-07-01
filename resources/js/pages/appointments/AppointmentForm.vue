@@ -1,18 +1,19 @@
 <script setup>
 import axios from "axios";
 import { reactive, onMounted, ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import useToastr from '../../toastr';
 import { Form } from 'vee-validate';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
 
-
 const router = useRouter();
+const route = useRoute();
 const toastr = useToastr();
 const clients = ref();
+const editMode = ref(false);
 const form = reactive({
-    'name': '',
+    'title': '',
     'description': '',
     'start_time': '',
     'end_time': '',
@@ -20,7 +21,27 @@ const form = reactive({
 });
 
 const handleSubmit = (values, actions) => {
+    if (editMode.value) {
+        updateAppointment(values, actions)
+    } else {
+        createAppointment(values, actions)
+    }
+}
+
+const createAppointment = (values, actions) => {
     axios.post('/api/appointments/store', form)
+        .then((response) => {
+            router.push('/admin/appointments');
+            toastr.success(response.data.message);
+        }).catch((errors) => {
+            if (errors.response?.data?.errors) {
+                actions.setErrors(errors.response.data.errors);
+            }
+        });
+}
+
+const updateAppointment = (values, actions) => {
+    axios.put(`/api/appointments/${route.params.id}/update`, form)
         .then((response) => {
             router.push('/admin/appointments');
             toastr.success(response.data.message);
@@ -38,7 +59,25 @@ const getClients = () => {
         });
 }
 
+const getAppointment = () => {
+    axios.get(`/api/appointments/${route.params.id}/edit`)
+        .then(({ data }) => {
+            form.title = data.title;
+            form.client_id = data.client_id;
+            form.description = data.description;
+            form.start_time = data.formatted_start_time;
+            form.end_time = data.formatted_end_time;
+        }).catch((error) => {
+            console.log(error);
+        });
+};
+
 onMounted(() => {
+    if (route.name === 'admin.appointments.edit') {
+        editMode.value = true;
+        getAppointment();
+    }
+
     flatpickr(".flatpickr", {
         enableTime: true,
         dateFormat: "Y-m-d h:i K",
@@ -54,7 +93,11 @@ onMounted(() => {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Create Appointment</h1>
+                    <h1 class="m-0">
+                        <span v-if="editMode">Edit</span>
+                        <span v-else>Create</span>
+                        Appointment
+                    </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -64,7 +107,10 @@ onMounted(() => {
                         <li class="breadcrumb-item">
                             <router-link to="/admin/appointments">Appointments</router-link>
                         </li>
-                        <li class="breadcrumb-item active">Create</li>
+                        <li class="breadcrumb-item active">
+                            <span v-if="editMode">Edit</span>
+                            <span v-else>Create</span>
+                        </li>
                     </ol>
                 </div>
             </div>
