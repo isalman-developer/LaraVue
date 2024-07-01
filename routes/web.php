@@ -34,6 +34,8 @@ Route::delete('/api/users', [UserController::class, 'bulkDelete']);
 Route::get('/api/appointments', [AppointmentController::class, 'index']);
 Route::get('/api/appointments/status', [AppointmentController::class, 'getStatusWithCount']);
 Route::post('/api/appointments/store', [AppointmentController::class, 'store']);
+Route::get('/api/appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
+Route::put('/api/appointments/{appointment}/update', [AppointmentController::class, 'update']);
 
 // client routes
 Route::get('/api/clients', [ClientController::class, 'index']);

@@ -112,9 +112,9 @@ onMounted(() => {
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="">
+                                            <router-link :to="{name:'admin.appointments.edit', params: {'id': appointment.id}}">
                                                 <i class="fa fa-edit mr-2"></i>
-                                            </a>
+                                            </router-link>
 
                                             <a href="">
                                                 <i class="fa fa-trash text-danger"></i>

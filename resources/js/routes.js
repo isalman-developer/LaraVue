@@ -10,7 +10,11 @@ export default [
     }, {
         path: '/admin/appointments/create',
         name: 'admin.appointments.create',
-        component: () => import('./pages/appointments/CrateAppointments.vue')
+        component: () => import('./pages/appointments/AppointmentForm.vue')
+    }, {
+        path: '/admin/appointments/:id/edit',
+        name: 'admin.appointments.edit',
+        component: () => import('./pages/appointments/AppointmentForm.vue')
     }, {
         path: '/admin/users',
         name: 'admin.users',

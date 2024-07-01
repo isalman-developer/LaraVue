@@ -75,6 +75,27 @@ class AppointmentController extends Controller
             'status' => AppointmentStatus::SCHEDULED,
         ]);
 
+        return response()->json(['message' => 'Appointment updated successfully']);
+    }
+
+    public function edit(Appointment $appointment)
+    {
+        return $appointment;
+    }
+
+    public function update(Appointment $appointment)
+    {
+        $validated = request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'client_id' => 'required'
+        ], [
+            'client_id.required' => 'Client name field is required'
+        ]);
+
+        $appointment->update($validated);
         return response()->json(['message' => 'Appointment added successfully']);
     }
 }
