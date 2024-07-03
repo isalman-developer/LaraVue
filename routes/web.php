@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,9 @@ Route::post('/api/appointments/store', [AppointmentController::class, 'store']);
 Route::get('/api/appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
 Route::put('/api/appointments/{appointment}/update', [AppointmentController::class, 'update']);
 Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+
+// dashboard routes
+Route::get('/api/stats/appointments', [DashboardController::class, 'dashboard']);
 
 // client routes
 Route::get('/api/clients', [ClientController::class, 'index']);
