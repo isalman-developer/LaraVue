@@ -1,16 +1,25 @@
 <script setup>
 import axios from 'axios';
-import {reactive} from 'vue';
+import { reactive, ref } from 'vue';
 
+const errorMessage = ref('');
+const loading = ref(false);
 const form = reactive({
     email: '',
     password: ''
 });
 
 const handleSubmit = () => {
+    loading.value = true;
+    errorMessage.value = "";
     axios.post('/login', form)
         .then(() => {
             window.location.href = "/admin/dashboard";
+        }).catch((error) => {
+            console.log(error);
+            errorMessage.value = error.response.data.message;
+        }).finally(() => {
+            loading.value = false;
         });
 }
 
@@ -42,6 +51,9 @@ const handleSubmit = () => {
                             </div>
                         </div>
                     </div>
+                    <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                        {{ errorMessage }}
+                    </div>
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
@@ -53,7 +65,12 @@ const handleSubmit = () => {
                         </div>
 
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <div v-if="loading" class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span v-else>Sign In</span>
+                            </button>
                         </div>
 
                     </div>
