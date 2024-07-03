@@ -39,7 +39,8 @@ Route::put('/api/appointments/{appointment}/update', [AppointmentController::cla
 Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
 
 // dashboard routes
-Route::get('/api/stats/appointments', [DashboardController::class, 'dashboard']);
+Route::get('/api/stats/appointments', [DashboardController::class, 'appointmentsCount']);
+Route::get('/api/stats/users', [DashboardController::class, 'usersCount']);
 
 // client routes
 Route::get('/api/clients', [ClientController::class, 'index']);
