@@ -1,5 +1,9 @@
 export default [
     {
+        path: '/login',
+        name: 'admin.login',
+        component: () => import('../js/pages/auth/login.vue'),
+    }, {
         path: '/admin/dashboard',
         name: 'admin.dashboard',
         component: () => import('../js/components/Dashboard.vue'),
