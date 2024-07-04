@@ -13,7 +13,7 @@
     <div class="wrapper" id="app">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item" id="toggleMenuIcon">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
@@ -253,5 +253,25 @@
         </footer>
     </div>
 
+    <script>
+        //code added for stoting the state of side menu in local storage so after refreshing the page the state of the side menu should remain the same
+        document.addEventListener('DOMContentLoaded', function(){
+            const toggleMenu = document.getElementById('toggleMenuIcon');
+            const body = document.querySelector('body');
+
+            toggleMenu.addEventListener('click', () => {
+                if(body.classList.contains('sidebar-collapse')){
+                    localStorage.setItem('sidebarState', 'expanded')
+                }else{
+                    localStorage.setItem('sidebarState', 'collapsed');
+                }
+            });
+
+            const sidebarState = localStorage.getItem('sidebarState');
+            if(sidebarState == 'collapsed'){
+                body.classList.add('sidebar-collapse');
+            }
+        });
+    </script>
 </body>
 </html>
