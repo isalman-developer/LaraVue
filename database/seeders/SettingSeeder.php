@@ -20,7 +20,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'date_format',
-                'value' => 'MM/DD/YYYY'
+                'value' => 'm/d/Y'
             ],
             [
                 'key' => 'pagination_limit',

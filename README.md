@@ -1,24 +1,22 @@
-## Application Settings (Dynamic properties of app)
-1. How to create some dynamic properties of an application (app_name, date_formate, pagination_limit etc).
+## Using Dynamic Settings in our Application, Cache, Config
 
-2. We will create a table for it, to store it and also update them if needed. (Model, Migration).
+1. Create a helper functions `function setting($key) {}` where we will get the setting for that specific key and will be returned back its value.
 
-3. Create a seeder for it, to store default values to these columns.
+2. so each time we call this setting function in helper this will query the databse which is costly. so to avoid this we will user __Cache__ mechanism for this. i.e
 
-4. In __UpdateSetting.vue__ create a function `getSettings`to fetch settings values from databse. also call `getSettings` on `onMounted`;
-
-5. Create a `const settings = ref([]);` to store the value of the response and also populate the form inputs. 
-
-6. Create a __route__ and a controller __SettingController__ for this functionality.
-
-7. Now we have to update settings so create a new function `updateSettings` with __put axios request__ & create an `api` for this function.
-
-8. Add __toastr__ for update success function.
-
-## Add validation for this in Controller and display them on vue also
-
-1. validate the settings values, if there is any error store them in `const errors = ref()` and then display them conditionally under each field like i.e
     ```
-      <span class="text-danger text-sm" v-if="errors && errros.app_name" >{{ errors.app_name[0] }}</span>
+    $settings = Cache::rememberForever('settins', function () {
+        return Setting::pluck('value', 'key')->all();
+    });
     ```
-2. on calling `updateSettings` clear the errors so they they will be disappeared from errors.value and new value will be inserted.
+
+3. we will also fluch the cache after the setting is update so after getting the setting also we will cache it again.
+
+
+## What if there are no settings in our database as well as in cache then we will get it from config file settings
+
+1. So first create a config file `settings.php` and store the defult setting in it.
+
+2. also add a check if there are no settings in cache or in database then load them from config file __settings__
+
+3. also add another check inside __SettingController__  `index` function if there are no settings then load them form config file to fill out the form of update settings. when we update the form then all of the settings will be inserted again.

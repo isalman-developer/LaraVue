@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SettingController extends Controller
 {
@@ -12,7 +13,12 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return Setting::pluck('value', 'key')->toArray();
+        $settings = Setting::pluck('value', 'key')->toArray();
+        if(!$settings){
+            $settings = config('settings.default');
+        }
+
+        return $settings;
     }
 
     /**
@@ -59,9 +65,13 @@ class SettingController extends Controller
         ]);
 
         foreach ($settings as $key => $setting) {
-            Setting::where('key', $key)->update(['value' => $setting]);
+            Setting::updateOrCreate([
+                'key' => $key
+            ],[
+                'value' => $setting
+            ]);
         }
-
+        Cache::flush();
         return response()->json(['success' => 'Settings updated scuccessfully']);
     }
 
