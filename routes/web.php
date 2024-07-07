@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,10 @@ Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 
 // dashboard routes
 Route::get('/api/stats/appointments', [DashboardController::class, 'appointmentsCount']);
 Route::get('/api/stats/users', [DashboardController::class, 'usersCount']);
+
+//settings routes
+Route::get('/api/settings', [SettingController::class, 'index']);
+Route::put('/api/settings', [SettingController::class, 'update']);
 
 // client routes
 Route::get('/api/clients', [ClientController::class, 'index']);
