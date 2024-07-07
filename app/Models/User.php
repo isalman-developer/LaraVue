@@ -47,10 +47,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $appends = [
+        'formatted_created_at'
+    ];
+
     public function role(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => RoleType::from($value)->name,
         );
+    }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->created_at->format(setting('date_format'));
     }
 }

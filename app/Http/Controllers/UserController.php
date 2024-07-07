@@ -19,7 +19,7 @@ class UserController extends Controller
                 $query->where('name', 'like', "%" . $searchQuery . "%");
             })
             ->latest()
-            ->paginate();
+            ->paginate(setting('pagination_limit'));
         return $users;
     }
 
