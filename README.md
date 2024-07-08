@@ -1,22 +1,10 @@
-## Using Dynamic Settings in our Application, Cache, Config
+## Profile Update
+1. create `ProfileController` and api for getting profile data.
 
-1. Create a helper functions `function setting($key) {}` where we will get the setting for that specific key and will be returned back its value.
+2. in `index` function `return reqeust()->user()->only(['name', 'email', 'role']);`
 
-2. so each time we call this setting function in helper this will query the databse which is costly. so to avoid this we will user __Cache__ mechanism for this. i.e
+3. From api store the data in `const form = ref();` and populate the form using `v-model`;
 
-    ```
-    $settings = Cache::rememberForever('settins', function () {
-        return Setting::pluck('value', 'key')->all();
-    });
-    ```
+4. add another api for update profile api and also the function for it.
 
-3. we will also fluch the cache after the setting is update so after getting the setting also we will cache it again.
-
-
-## What if there are no settings in our database as well as in cache then we will get it from config file settings
-
-1. So first create a config file `settings.php` and store the defult setting in it.
-
-2. also add a check if there are no settings in cache or in database then load them from config file __settings__
-
-3. also add another check inside __SettingController__  `index` function if there are no settings then load them form config file to fill out the form of update settings. when we update the form then all of the settings will be inserted again.
+5. add toastr on successfully updated and errors if there is any. 
