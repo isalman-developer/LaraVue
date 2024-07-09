@@ -71,6 +71,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        // you have to define here, a new folder here in storage. so that a link will be created between that folder and public folder.
+        public_path('storage/photos') => storage_path('app/photos'),
     ],
 
 ];

@@ -3,15 +3,17 @@
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 
-function setting($key)
-{
-    $settings = Cache::rememberForever('settins', function () {
-        return Setting::pluck('value', 'key')->all();
-    });
+if (!function_exists('setting')) {
+    function setting($key)
+    {
+        $settings = Cache::rememberForever('settins', function () {
+            return Setting::pluck('value', 'key')->all();
+        });
 
-    if (!$settings) {
-        $settings = config('settings.default');
+        if (!$settings) {
+            $settings = config('settings.default');
+        }
+
+        return $settings[$key] ?? false;
     }
-
-    return $settings[$key] ?? false;
 }
