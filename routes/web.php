@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
     //profile routes
     Route::get('/api/profile', [ProfileController::class, 'index']);
     Route::put('/api/profile', [ProfileController::class, 'update']);
+    Route::post('/api/upload-profile-image', [ProfileController::class, 'uploadProfileImage']);
 
     // client routes
     Route::get('/api/clients', [ClientController::class, 'index']);

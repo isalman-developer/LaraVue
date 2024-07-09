@@ -5,6 +5,8 @@ import useToastr from '../../toastr';
 
 const errors = ref();
 const toastr = useToastr();
+const fileInput = ref();
+const profilePictureUrl = ref(null);
 const form = ref({
     name: '',
     email: '',
@@ -27,6 +29,26 @@ const updateProfile = () => {
             if (error && error.response.status == 422) {
                 errors.value = error.response.data.errors;
             }
+        });
+}
+
+// Profile image update code
+
+// function to open input:file to upload an image
+const openFileInput = () => {
+    fileInput.value.click();
+}
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    profilePictureUrl.value = URL.createObjectURL(file);
+
+    const formData = new FormData();
+    formData.append('profile_picture', file);
+
+    axios.post('/api/upload-profile-image', formData)
+        .then((response) => {
+            toastr.success(response.data.success);
         });
 }
 
@@ -60,13 +82,12 @@ onMounted(() => {
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <input type="file" class="d-none">
-                                <img class="profile-user-img img-circle" src="/public/noimage.png"
-                                    alt="User profile picture">
+                                <input ref="fileInput" @change="handleFileChange" type="file" class="d-none">
+                                <img @click="openFileInput" class="profile-user-img img-circle"
+                                    :src="profilePictureUrl ?? form.avatar" alt="User profile picture">
                             </div>
 
                             <h3 class="profile-username text-center">John Doe</h3>
-
                             <p class="text-muted text-center">Admin</p>
                         </div>
                     </div>
@@ -92,7 +113,8 @@ onMounted(() => {
                                             <div class="col-sm-10">
                                                 <input v-model="form.name" type="text" class="form-control"
                                                     id="inputName" placeholder="Name">
-                                                <span class="text-danger text-sm" v-if="errors && errors.name">{{ errors.name[0] }}</span>
+                                                <span class="text-danger text-sm" v-if="errors && errors.name">{{
+                                                    errors.name[0] }}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -100,7 +122,8 @@ onMounted(() => {
                                             <div class="col-sm-10">
                                                 <input v-model="form.email" type="email" class="form-control "
                                                     id="inputEmail" placeholder="Email">
-                                                <span class="text-danger text-sm" v-if="errors && errors.email">{{ errors.email[0] }}</span>
+                                                <span class="text-danger text-sm" v-if="errors && errors.email">{{
+                                                    errors.email[0] }}</span>
 
                                             </div>
                                         </div>
@@ -155,3 +178,10 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style>
+.profile-user-img:hover {
+    background-color: blue;
+    cursor: pointer;
+}
+</style>
