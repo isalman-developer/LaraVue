@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 import useToastr from '../../toastr';
 
@@ -11,6 +11,12 @@ const form = ref({
     name: '',
     email: '',
     role: ''
+});
+
+const changePasswordForm = reactive({
+    'current_password': '',
+    'password': '',
+    'password_confirmation': ''
 });
 
 const getProfile = () => {
@@ -33,12 +39,12 @@ const updateProfile = () => {
 }
 
 // Profile image update code
-
 // function to open input:file to upload an image
 const openFileInput = () => {
     fileInput.value.click();
 }
 
+// axios request to send image for uploading
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     profilePictureUrl.value = URL.createObjectURL(file);
@@ -51,6 +57,20 @@ const handleFileChange = (event) => {
             toastr.success(response.data.success);
         });
 }
+
+// password change function
+const handleChangePassword = () => {
+    errors.value = '';
+    console.log(changePasswordForm);
+    axios.post('/api/change-user-password', changePasswordForm)
+        .then((response) => {
+            toastr.success(response.data.success);
+            Object.keys(changePasswordForm).forEach(key => changePasswordForm[key] = '');
+        }).catch((error) => {
+            errors.value = error.response.data.errors;
+        })
+}
+
 
 onMounted(() => {
     getProfile();
@@ -137,28 +157,39 @@ onMounted(() => {
                                 </div>
 
                                 <div class="tab-pane" id="changePassword">
-                                    <form class="form-horizontal">
+                                    <form @submit.prevent="handleChangePassword()" class="form-horizontal">
                                         <div class="form-group row">
-                                            <label for="currentPassword" class="col-sm-3 col-form-label">Current
-                                                Password</label>
+                                            <label for="currentPassword" class="col-sm-3 col-form-label">
+                                                Current Password
+                                            </label>
                                             <div class="col-sm-9">
-                                                <input type="password" class="form-control " id="currentPassword"
+                                                <input v-model="changePasswordForm.current_password" type="password"
+                                                    class="form-control " id="currentPassword"
                                                     placeholder="Current Password">
+                                                <span class="text-danger text-sm"
+                                                    v-if="errors && errors.current_password">
+                                                    {{ errors.current_password[0] }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="newPassword" class="col-sm-3 col-form-label">New
                                                 Password</label>
                                             <div class="col-sm-9">
-                                                <input type="password" class="form-control " id="newPassword"
-                                                    placeholder="New Password">
+                                                <input v-model="changePasswordForm.password" type="password"
+                                                    class="form-control " id="newPassword" placeholder="New Password">
+                                                <span class="text-danger text-sm" v-if="errors && errors.password">
+                                                    {{ errors.password[0] }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="passwordConfirmation" class="col-sm-3 col-form-label">Confirm
-                                                New Password</label>
+                                            <label for="passwordConfirmation" class="col-sm-3 col-form-label">
+                                                Confirm New Password
+                                            </label>
                                             <div class="col-sm-9">
-                                                <input type="password" class="form-control " id="passwordConfirmation"
+                                                <input v-model="changePasswordForm.password_confirmation"
+                                                    type="password" class="form-control " id="passwordConfirmation"
                                                     placeholder="Confirm New Password">
                                             </div>
                                         </div>

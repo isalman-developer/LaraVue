@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\UpdateUserPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -34,5 +35,16 @@ class ProfileController extends Controller
             Storage::delete($previousLink);
             return response()->json(['success' => 'Profile image uploaded successsfully']);
         }
+    }
+
+    public function changeUserPassword(Request $request, UpdateUserPassword $updateUserPassword)
+    {
+        $updateUserPassword->update($request->user(), [
+            'current_password' => $request->current_password,
+            'password' => $request->password,
+            'password_confirmation' => $request->password_confirmation
+        ]);
+
+        return response()->json(['success' => 'Password changed successfully.']);
     }
 }
