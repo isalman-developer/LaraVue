@@ -48,6 +48,7 @@ const deleteAppointment = (id) => {
         if (result.isConfirmed) {
             axios.delete(`/api/appointments/${id}`)
                 .then((response) => {
+                    updateAppointmentsCount(id);
                     appointments.value.data = appointments.value.data.filter((appointment) => appointment.id !== id);
                     Swal.fire({
                         title: "Deleted!",
@@ -57,6 +58,13 @@ const deleteAppointment = (id) => {
                 })
         }
     });
+}
+
+// reduce the appointments count after delete
+const updateAppointmentsCount = (id) => {
+    const deletesAppStatus = appointments.value.data.find((appointment) => appointment.id === id);
+    const statusToBeUpdate = appointmentStatuses.value.find(status => status.name === deletesAppStatus.status.name);
+    statusToBeUpdate.count--;
 }
 
 onMounted(() => {
