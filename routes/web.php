@@ -54,6 +54,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/api/profile', [ProfileController::class, 'update']);
     Route::post('/api/upload-profile-image', [ProfileController::class, 'uploadProfileImage']);
 
+    //password update
+    Route::post('/api/change-user-password', [ProfileController::class, 'changeUserPassword']);
+
     // client routes
     Route::get('/api/clients', [ClientController::class, 'index']);
 
